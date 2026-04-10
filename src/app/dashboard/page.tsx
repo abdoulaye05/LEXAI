@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -60,35 +61,45 @@ export default async function DashboardPage() {
               num: "01",
               title: "Générer un contrat",
               desc: "Décrivez le contexte. Obtenez un contrat structuré en articles numérotés, référencé au Code civil.",
+              href: "/dashboard/contrats",
             },
             {
               num: "02",
               title: "Analyser un document",
-              desc: "Importez un contrat. LexAI identifie les clauses à risque et propose des reformulations.",
+              desc: "Collez un contrat. LexAI identifie les clauses à risque et propose des reformulations.",
+              href: "/dashboard/analyse",
             },
             {
               num: "03",
               title: "Rédiger une mise en demeure",
-              desc: "Un ton ferme, un cadre légal précis, une lettre prête à envoyer.",
+              desc: "Un ton ferme, un cadre légal précis, une lettre prête à envoyer en recommandé.",
+              href: "/dashboard/mise-en-demeure",
             },
             {
               num: "04",
               title: "Créer une clause sur mesure",
-              desc: "Clauses de confidentialité, non-concurrence, force majeure — calibrées à votre besoin.",
+              desc: "Confidentialité, non-concurrence, force majeure — calibrées à votre dossier.",
+              href: "/dashboard/clauses",
             },
           ].map((tool, i) => (
-            <article
+            <Link
               key={tool.num}
-              className={`border-t border-ink px-0 py-10 md:px-10 ${
+              href={tool.href}
+              className={`group border-t border-ink px-0 py-10 transition-colors duration-200 ease-surgical hover:bg-ink hover:text-creme md:px-10 ${
                 i % 2 === 0 ? "md:border-r md:border-ink" : ""
               }`}
             >
-              <p className="label">{tool.num}</p>
+              <p className="label group-hover:text-creme/70">{tool.num}</p>
               <h3 className="mt-3 font-serif text-3xl leading-tight tracking-tightest">
                 {tool.title}
               </h3>
-              <p className="mt-3 max-w-md text-muted">{tool.desc}</p>
-            </article>
+              <p className="mt-3 max-w-md text-muted group-hover:text-creme/70">
+                {tool.desc}
+              </p>
+              <p className="mt-6 inline-block border-b border-current pb-1 font-sans text-xs font-bold uppercase tracking-[0.08em] transition-colors group-hover:text-accent">
+                Ouvrir l'outil →
+              </p>
+            </Link>
           ))}
         </div>
       </section>
