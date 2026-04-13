@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") ?? "/dashboard";
+  const explicitRedirect = searchParams.get("redirect");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,10 +20,11 @@ export default function LoginForm() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data: signInData, error: signInError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
     if (signInError) {
       setError(mapError(signInError.message));
@@ -31,7 +32,19 @@ export default function LoginForm() {
       return;
     }
 
-    router.push(redirect);
+    // Si l'utilisateur arrivait depuis une route précise, on l'y renvoie.
+    // Sinon, on route admin vs avocat selon profiles.is_admin.
+    let target = explicitRedirect;
+    if (!target && signInData.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("user_id", signInData.user.id)
+        .maybeSingle();
+      target = profile?.is_admin ? "/admin" : "/dashboard";
+    }
+
+    router.push(target ?? "/dashboard");
     router.refresh();
   }
 

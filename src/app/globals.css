@@ -130,4 +130,43 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+
+  .marquee-track {
+    display: inline-flex;
+    animation: marquee 28s linear infinite;
+    will-change: transform;
+  }
+
+  /* Pages légales : typographie éditoriale cohérente */
+  .prose-lexai {
+    font-family: "Syne", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .prose-lexai p {
+    max-width: 65ch;
+  }
+
+  .prose-lexai ul {
+    max-width: 65ch;
+  }
+
+  .prose-lexai strong {
+    color: var(--ink);
+  }
+
+  .prose-lexai a {
+    text-underline-offset: 3px;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }

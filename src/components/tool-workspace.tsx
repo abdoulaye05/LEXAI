@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { getTemplatesForTool } from "@/lib/form-templates";
+import type { ToolId } from "@/lib/prompts";
 
 export type Field = {
   name: string;
@@ -13,7 +15,7 @@ export type Field = {
 };
 
 export type ToolConfig = {
-  id: "contrat" | "analyse" | "mise-en-demeure" | "clause";
+  id: ToolId;
   number: string;
   title: string;
   subtitle: string;
@@ -26,6 +28,8 @@ export type ToolConfig = {
 };
 
 export default function ToolWorkspace({ config }: { config: ToolConfig }) {
+  const templates = getTemplatesForTool(config.id);
+  const [templatePickerOpen, setTemplatePickerOpen] = useState(false);
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(config.fields.map((f) => [f.name, ""]))
   );
@@ -34,6 +38,8 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
     "idle"
   );
   const [error, setError] = useState<string | null>(null);
+  const [generationId, setGenerationId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   function updateField(name: string, value: string) {
@@ -44,6 +50,7 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
     e.preventDefault();
     setError(null);
     setOutput("");
+    setGenerationId(null);
     setStatus("streaming");
 
     const controller = new AbortController();
@@ -62,6 +69,9 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
         throw new Error(data?.error ?? `HTTP ${res.status}`);
       }
       if (!res.body) throw new Error("no_body");
+
+      const headerGenId = res.headers.get("X-LexAI-Generation-Id");
+      if (headerGenId) setGenerationId(headerGenId);
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -92,9 +102,16 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
   function handleCopy() {
     if (!output) return;
     navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
-  function handleDownload() {
+  function handleDownloadPdf() {
+    if (!generationId) return;
+    window.location.href = `/api/export/pdf?id=${encodeURIComponent(generationId)}`;
+  }
+
+  function handleDownloadMarkdown() {
     if (!output) return;
     const blob = new Blob([output], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -128,7 +145,63 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
           onSubmit={handleSubmit}
           className="border-ink px-10 py-10 lg:border-r"
         >
-          <p className="label mb-8">Brief</p>
+          <div className="mb-8 flex items-baseline justify-between">
+            <p className="label">Brief</p>
+            {templates.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setTemplatePickerOpen((v) => !v)}
+                disabled={streaming}
+                className="font-sans text-[11px] font-bold uppercase tracking-[0.12em] text-ink underline-offset-4 hover:text-accent hover:underline disabled:opacity-50"
+              >
+                {templatePickerOpen ? "Fermer" : "Templates →"}
+              </button>
+            )}
+          </div>
+
+          {templatePickerOpen && (
+            <div className="mb-10 border border-ink bg-creme">
+              <div className="hairline-b px-6 py-4">
+                <p className="label">
+                  {templates.length} templates prêts à l&apos;emploi
+                </p>
+                <p className="mt-2 text-xs text-muted">
+                  Cliquez sur un template pour pré-remplir le formulaire. Vous
+                  pourrez ensuite ajuster avant de générer.
+                </p>
+              </div>
+              <ul className="divide-y divide-ink/15">
+                {templates.map((tpl) => (
+                  <li key={tpl.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setValues((prev) => ({ ...prev, ...tpl.values }));
+                        setTemplatePickerOpen(false);
+                      }}
+                      className="group flex w-full items-start justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-ink/5"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+                          {tpl.category}
+                        </p>
+                        <p className="mt-1 font-serif text-lg leading-tight tracking-tightest">
+                          {tpl.title}
+                        </p>
+                        <p className="mt-1 text-xs text-muted">
+                          {tpl.description}
+                        </p>
+                      </div>
+                      <span className="shrink-0 self-center font-sans text-[11px] font-bold uppercase tracking-[0.12em] text-ink transition-transform group-hover:translate-x-1 group-hover:text-accent">
+                        Utiliser →
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="space-y-10">
             {config.fields.map((field) => (
               <FieldRenderer
@@ -174,11 +247,22 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
             {status === "done" && output && (
               <div className="flex items-center gap-6">
                 <button onClick={handleCopy} className="btn-ghost">
-                  Copier
+                  {copied ? "✓ Copié" : "Copier"}
                 </button>
-                <button onClick={handleDownload} className="btn-ghost">
-                  Télécharger
+                <button
+                  onClick={handleDownloadMarkdown}
+                  className="btn-ghost"
+                >
+                  .md
                 </button>
+                {generationId && (
+                  <button
+                    onClick={handleDownloadPdf}
+                    className="btn-primary px-6 py-3 text-[11px]"
+                  >
+                    Télécharger PDF
+                  </button>
+                )}
               </div>
             )}
           </div>

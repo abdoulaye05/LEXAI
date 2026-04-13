@@ -10,18 +10,31 @@ const NAV = [
   { num: "04", label: "Mise en demeure", href: "/dashboard/mise-en-demeure" },
   { num: "05", label: "Clauses sur mesure", href: "/dashboard/clauses" },
   { num: "06", label: "Abonnement", href: "/dashboard/abonnement" },
+  { num: "07", label: "Historique", href: "/dashboard/historique" },
+  { num: "08", label: "Réglages", href: "/dashboard/reglages" },
 ];
 
 export default function DashboardShell({
   children,
   email,
   fullName,
+  isAdmin,
+  countUsed,
+  countLimit,
 }: {
   children: React.ReactNode;
   email: string;
   fullName: string | null;
+  isAdmin: boolean;
+  countUsed: number;
+  countLimit: number;
 }) {
   const pathname = usePathname();
+  const unlimited = countLimit >= 1000;
+  const quotaPct = unlimited
+    ? 0
+    : Math.min(100, Math.round((countUsed / countLimit) * 100));
+  const quotaReached = !unlimited && countUsed >= countLimit;
 
   return (
     <div className="min-h-screen bg-creme text-ink">
@@ -65,7 +78,61 @@ export default function DashboardShell({
               </nav>
             </div>
 
-            <div className="border-t border-ink pt-6">
+            <div className="mt-10 border-t border-ink pt-6">
+              <p className="label">Documents ce mois</p>
+              {unlimited ? (
+                <>
+                  <p className="mt-3 font-serif text-4xl leading-none tracking-tightest">
+                    {countUsed}
+                    <span className="text-2xl italic text-muted"> / ∞</span>
+                    <span className="text-accent">.</span>
+                  </p>
+                  <p className="mt-3 text-xs text-muted">
+                    Générations illimitées
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="mt-3 font-serif text-4xl leading-none tracking-tightest">
+                    {countUsed}
+                    <span className="text-2xl text-muted"> / {countLimit}</span>
+                    <span className="text-accent">.</span>
+                  </p>
+                  <div
+                    className="mt-4 h-[2px] w-full bg-ink/15"
+                    aria-hidden="true"
+                  >
+                    <div
+                      className={`h-full transition-all duration-500 ease-surgical ${
+                        quotaReached ? "bg-accent" : "bg-ink"
+                      }`}
+                      style={{ width: `${quotaPct}%` }}
+                    />
+                  </div>
+                  {quotaReached ? (
+                    <p className="mt-3 text-xs text-accent">
+                      Quota atteint. Passez au plan supérieur pour continuer.
+                    </p>
+                  ) : (
+                    <p className="mt-3 text-xs text-muted">
+                      {countLimit - countUsed} restant
+                      {countLimit - countUsed > 1 ? "s" : ""} sur l&apos;essai
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div className="mt-8 border-t border-ink pt-6">
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="mb-6 flex items-baseline gap-3 font-sans text-[11px] font-bold uppercase tracking-[0.14em] text-accent transition-colors hover:text-ink"
+                >
+                  <span>◆</span>
+                  <span>Console admin →</span>
+                </Link>
+              )}
               <p className="label">Connecté</p>
               <p className="mt-2 font-serif text-lg leading-tight">
                 {fullName ?? email}
