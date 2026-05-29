@@ -106,9 +106,9 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  function handleDownloadPdf() {
+  function handleDownloadPdf(background: "creme" | "white" = "creme") {
     if (!generationId) return;
-    window.location.href = `/api/export/pdf?id=${encodeURIComponent(generationId)}`;
+    window.location.href = `/api/export/pdf?id=${encodeURIComponent(generationId)}&background=${background}`;
   }
 
   function handleDownloadMarkdown() {
@@ -256,12 +256,22 @@ export default function ToolWorkspace({ config }: { config: ToolConfig }) {
                   .md
                 </button>
                 {generationId && (
-                  <button
-                    onClick={handleDownloadPdf}
-                    className="btn-primary px-6 py-3 text-[11px]"
-                  >
-                    Télécharger PDF
-                  </button>
+                  <>
+                    <button
+                      onClick={() => handleDownloadPdf("creme")}
+                      className="btn-ghost"
+                      title="Fond crème — esthétique éditoriale LexAI"
+                    >
+                      PDF crème
+                    </button>
+                    <button
+                      onClick={() => handleDownloadPdf("white")}
+                      className="btn-primary px-6 py-3 text-[11px]"
+                      title="Fond blanc standard — pour dépôt en juridiction ou impression bureautique"
+                    >
+                      PDF blanc
+                    </button>
+                  </>
                 )}
               </div>
             )}

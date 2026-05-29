@@ -21,9 +21,9 @@ export default function HistoriqueDetailActions({
     setTimeout(() => setCopied(false), 2000);
   }
 
-  function handleDownloadPdf() {
+  function handleDownloadPdf(background: "creme" | "white" = "creme") {
     if (disabled) return;
-    window.location.href = `/api/export/pdf?id=${encodeURIComponent(generationId)}`;
+    window.location.href = `/api/export/pdf?id=${encodeURIComponent(generationId)}&background=${background}`;
   }
 
   function handleDownloadMarkdown() {
@@ -48,11 +48,20 @@ export default function HistoriqueDetailActions({
       <div className="space-y-3">
         <button
           type="button"
-          onClick={handleDownloadPdf}
+          onClick={() => handleDownloadPdf("creme")}
           disabled={disabled}
           className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Télécharger en PDF
+          Télécharger PDF crème
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleDownloadPdf("white")}
+          disabled={disabled}
+          className="btn-ghost w-full py-3 text-center disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          PDF blanc (impression / dépôt)
         </button>
 
         <button
@@ -75,11 +84,12 @@ export default function HistoriqueDetailActions({
       </div>
 
       <div className="mt-10 border-t border-ink pt-6">
-        <p className="label mb-3">Formats disponibles</p>
+        <p className="label mb-3">Quel fond choisir ?</p>
         <p className="text-xs text-muted">
-          Le PDF inclut l&apos;en-tête LexAI, la typographie légale (Times New
-          Roman), la pagination et le bas de page professionnel. C&apos;est le
-          format à privilégier pour un envoi au client.
+          <strong>Crème</strong> : esthétique éditoriale LexAI, idéal pour un
+          envoi numérique au client.{" "}
+          <strong>Blanc</strong> : neutre, à privilégier pour un dépôt en
+          juridiction ou une impression bureautique.
         </p>
       </div>
     </div>

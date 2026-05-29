@@ -24,12 +24,19 @@ const TOOL_LABELS: Record<ToolId, string> = {
   analyse: "Analyse juridique",
   "mise-en-demeure": "Mise en demeure",
   clause: "Clause contractuelle",
+  conclusions: "Conclusions",
+};
+
+export type PdfBackground = "creme" | "white";
+
+const BACKGROUND_COLORS: Record<PdfBackground, string> = {
+  creme: "#F5F2ED",
+  white: "#FFFFFF",
 };
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
-    backgroundColor: "#F5F2ED",
     padding: 56,
     paddingBottom: 72, // room for footer
     fontFamily: "Times-Roman",
@@ -306,6 +313,7 @@ export type PdfOptions = {
   generation: GenerationForPdf;
   branding: CabinetBranding;
   plan: Plan | null;
+  background?: PdfBackground;
 };
 
 function getBrandingLevel(plan: Plan | null) {
@@ -357,7 +365,7 @@ function CabinetHeader({ branding }: { branding: CabinetBranding }) {
   );
 }
 
-function LexAIDocument({ generation, branding, plan }: PdfOptions) {
+function LexAIDocument({ generation, branding, plan, background }: PdfOptions) {
   const tokens = marked.lexer(generation.output_md) as Tokens.Generic[];
   const date = new Date(generation.created_at).toLocaleDateString("fr-FR", {
     day: "2-digit",
@@ -365,6 +373,7 @@ function LexAIDocument({ generation, branding, plan }: PdfOptions) {
     year: "numeric",
   });
   const brandingLevel = getBrandingLevel(plan);
+  const pageBackground = BACKGROUND_COLORS[background ?? "creme"];
 
   // Le "powered by" visible dans le header uniquement pour le niveau "visible" (Solo/essai)
   const showLexaiHeader = brandingLevel === "visible";
@@ -385,7 +394,7 @@ function LexAIDocument({ generation, branding, plan }: PdfOptions) {
       creator={authorName ?? "LexAI"}
       producer="LexAI"
     >
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={[styles.page, { backgroundColor: pageBackground }]}>
         <View style={styles.header} fixed>
           <CabinetHeader branding={branding} />
           <Text style={styles.metaRight}>

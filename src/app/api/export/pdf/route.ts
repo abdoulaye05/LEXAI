@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { generateLexAIPdf } from "@/lib/pdf";
+import { generateLexAIPdf, type PdfBackground } from "@/lib/pdf";
 import type { ToolId } from "@/lib/prompts";
 import type { Plan } from "@/types/database";
 
@@ -10,6 +10,8 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const generationId = searchParams.get("id");
+  const rawBg = searchParams.get("background");
+  const background: PdfBackground = rawBg === "white" ? "white" : "creme";
 
   if (!generationId) {
     return NextResponse.json({ error: "missing_id" }, { status: 400 });
@@ -89,6 +91,7 @@ export async function GET(request: NextRequest) {
       bar_id: profile?.bar_id ?? null,
     },
     plan,
+    background,
   });
 
   const safeFilenameBase =
