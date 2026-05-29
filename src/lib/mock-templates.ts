@@ -218,6 +218,102 @@ La clause respecte également le principe de proportionnalité issu de l'article
 
 — **Renonciation** : la faculté de renonciation prévue à l'alinéa 5 doit impérativement être exercée dans un délai bref. À défaut, l'employeur sera tenu au paiement de l'indemnité, même s'il n'a pas l'intention de faire respecter la clause (Cass. soc., 13 juillet 2010, n° 09-41.626).
 `,
+
+  conclusions: `# CONCLUSIONS RÉCAPITULATIVES
+
+**POUR :** La SAS ACME, société par actions simplifiée au capital de 50 000 euros, dont le siège social est situé 12 rue de Rivoli, 75001 Paris, immatriculée au RCS de Paris sous le n° 853 111 222, représentée par Monsieur Jean Dupont, en sa qualité de Président — DEMANDERESSE
+Ayant pour avocat : [À PRÉCISER : nom, Barreau de Paris, adresse]
+
+**CONTRE :** Monsieur Pierre Martin, consultant indépendant, demeurant 5 avenue de l'Opéra, 75002 Paris, SIRET 845 222 333 00012 — DÉFENDEUR
+Ayant pour avocat : [À PRÉCISER si connu]
+
+**DEVANT :** le Tribunal de commerce de Paris, [chambre]
+
+**N° RG :** 24/01234
+**Audience :** 12 juin 2026
+
+---
+
+## I — RAPPEL DES FAITS ET DE LA PROCÉDURE
+
+1. Aux termes d'un contrat de prestation de services en date du 15 janvier 2026 (**Pièce n° 1**), la SAS ACME a confié à Monsieur Pierre Martin, exerçant à titre indépendant, une mission de refonte de son site internet e-commerce, moyennant un forfait global de vingt-quatre mille euros hors taxes (24 000 € HT), payable en six (6) mensualités de quatre mille euros (4 000 €) HT.
+
+2. La concluante a ponctuellement réglé les cinq (5) premières échéances pour un montant total de vingt mille euros (20 000 €) HT, soit vingt-quatre mille euros (24 000 €) TTC (**Pièce n° 2** — relevé bancaire).
+
+3. Par lettre du 28 février 2026 (**Pièce n° 3**), Monsieur Martin a notifié à la concluante qu'il interrompait unilatéralement la prestation, sans livraison du livrable final, ni motivation tirée des stipulations contractuelles.
+
+4. La concluante a adressé à Monsieur Martin, par lettre recommandée avec accusé de réception du 10 mars 2026 (**Pièce n° 4**), une mise en demeure d'avoir à reprendre l'exécution du contrat dans un délai de quinze (15) jours, demeurée sans réponse.
+
+5. Aux termes d'une assignation délivrée le 25 mars 2026 (**Pièce n° 5**), la SAS ACME a saisi le Tribunal de commerce de Paris.
+
+## II — DISCUSSION
+
+### A — Sur l'inexécution caractérisée du contrat par Monsieur Martin
+
+Aux termes de l'article 1103 du Code civil, les contrats légalement formés tiennent lieu de loi à ceux qui les ont faits. L'article 1217 du même Code permet à la partie envers laquelle l'engagement n'a pas été exécuté de poursuivre l'exécution forcée en nature ou la résolution du contrat, et de demander réparation des conséquences de l'inexécution.
+
+En l'espèce, le contrat du 15 janvier 2026 imposait à Monsieur Martin une obligation de réaliser, dans le délai contractuel, la refonte intégrale du site e-commerce de la SAS ACME. Il s'évince des pièces versées au débat (**Pièces n° 1 et 3**) que cette obligation n'a pas été tenue : Monsieur Martin a unilatéralement interrompu la prestation au mois de février 2026, sans qu'aucun cas de force majeure au sens de l'article 1218 du Code civil ne soit invoqué, ni qu'aucun manquement du CLIENT ne soit allégué.
+
+L'inexécution est donc caractérisée et imputable à Monsieur Martin.
+
+### B — Sur le préjudice subi par la SAS ACME et la demande de dommages-intérêts
+
+Conformément à l'article 1231-1 du Code civil, le débiteur est condamné, s'il y a lieu, au paiement de dommages et intérêts soit à raison de l'inexécution de l'obligation, soit à raison du retard dans l'exécution.
+
+La SAS ACME a subi un triple préjudice du fait de cette inexécution :
+
+— **Préjudice financier direct** : les vingt mille euros (20 000 €) HT déjà versés n'ont aucune contrepartie utile, le livrable étant inachevé et non exploitable en l'état (**Pièce n° 6** — constat d'huissier du 15 mars 2026).
+
+— **Préjudice commercial** : la concluante a dû souscrire en urgence un contrat de substitution auprès d'un autre prestataire, pour un montant supérieur de huit mille euros (8 000 €) HT (**Pièce n° 7** — contrat de substitution).
+
+— **Préjudice moral / d'image** : le retard de mise en ligne du nouveau site marchand a contraint la concluante à reporter sa campagne commerciale de printemps, occasionnant une perte de chiffre d'affaires estimée à cinq mille euros (5 000 €) (**Pièce n° 8** — attestation expert-comptable).
+
+### C — À titre subsidiaire, sur la résolution judiciaire du contrat
+
+À supposer que le Tribunal ne ferait pas droit à la demande principale d'exécution forcée, la concluante sollicite, à titre subsidiaire, la résolution judiciaire du contrat sur le fondement de l'article 1227 du Code civil, avec restitution des sommes versées.
+
+## III — PAR CES MOTIFS
+
+Vu les articles 1103, 1217, 1218, 1227 et 1231-1 du Code civil,
+Vu l'article L. 721-3 du Code de commerce,
+Vu les pièces communiquées,
+
+Il est demandé au Tribunal de commerce de Paris de :
+
+**À titre principal,**
+
+— **DIRE ET JUGER que** Monsieur Pierre Martin a manqué à ses obligations contractuelles au titre du contrat de prestation de services du 15 janvier 2026 ;
+
+— **CONDAMNER** Monsieur Pierre Martin à payer à la SAS ACME la somme de trente-trois mille euros (33 000 €) à titre de dommages et intérêts, ventilée comme suit :
+  — 20 000 € au titre du préjudice financier direct,
+  — 8 000 € au titre du préjudice commercial (contrat de substitution),
+  — 5 000 € au titre du préjudice d'image et de perte de chiffre d'affaires ;
+
+— **ORDONNER** la production des éléments comptables justifiant l'avancement réel de la prestation ;
+
+**À titre subsidiaire,**
+
+— **PRONONCER** la résolution judiciaire du contrat du 15 janvier 2026 aux torts exclusifs de Monsieur Pierre Martin ;
+— **ORDONNER** la restitution par Monsieur Pierre Martin à la SAS ACME de la somme de vingt mille euros (20 000 €) versée au titre du contrat ;
+
+**En tout état de cause,**
+
+— **CONDAMNER** Monsieur Pierre Martin à payer à la SAS ACME la somme de trois mille cinq cents euros (3 500 €) au titre de l'article 700 du Code de procédure civile ;
+— **CONDAMNER** Monsieur Pierre Martin aux entiers dépens ;
+— **ORDONNER l'exécution provisoire** de la décision à intervenir.
+
+**SOUS TOUTES RÉSERVES**
+
+Liste des pièces communiquées :
+1. Contrat de prestation de services du 15 janvier 2026
+2. Relevé bancaire (5 versements de 4 000 € HT)
+3. Lettre d'interruption unilatérale du 28 février 2026
+4. Mise en demeure du 10 mars 2026 avec accusé de réception
+5. Assignation devant le Tribunal de commerce de Paris du 25 mars 2026
+6. Constat d'huissier du 15 mars 2026 attestant de l'état inachevé du livrable
+7. Contrat de substitution avec le prestataire X
+8. Attestation de l'expert-comptable de la SAS ACME
+`,
 };
 
 // Estimation grossière des tokens à partir du texte (1 token ≈ 4 caractères en français)

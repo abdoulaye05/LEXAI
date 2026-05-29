@@ -209,31 +209,42 @@ export default async function DashboardPage() {
               title: "Générer un contrat",
               desc: "Décrivez le contexte. Obtenez un contrat structuré en articles numérotés, référencé au Code civil.",
               href: "/dashboard/contrats",
+              fullWidth: false,
             },
             {
               num: "02",
               title: "Analyser un document",
               desc: "Collez un contrat. LexAI identifie les clauses à risque et propose des reformulations.",
               href: "/dashboard/analyse",
+              fullWidth: false,
             },
             {
               num: "03",
               title: "Rédiger une mise en demeure",
               desc: "Un ton ferme, un cadre légal précis, une lettre prête à envoyer en recommandé.",
               href: "/dashboard/mise-en-demeure",
+              fullWidth: false,
             },
             {
               num: "04",
               title: "Créer une clause sur mesure",
               desc: "Confidentialité, non-concurrence, force majeure — calibrées à votre dossier.",
               href: "/dashboard/clauses",
+              fullWidth: false,
+            },
+            {
+              num: "05",
+              title: "Rédiger des conclusions",
+              desc: "Faits, discussion, par ces motifs — des conclusions déposables structurées pour TJ, prud'hommes, T. com. ou Cour d'appel.",
+              href: "/dashboard/conclusions",
+              fullWidth: true,
             },
           ].map((tool, i) => (
             <Link
               key={tool.num}
               href={tool.href}
               className={`group border-t border-ink px-0 py-10 transition-colors duration-200 ease-surgical hover:bg-ink hover:text-creme md:px-10 ${
-                i % 2 === 0 ? "md:border-r md:border-ink" : ""
+                tool.fullWidth ? "md:col-span-2" : i % 2 === 0 ? "md:border-r md:border-ink" : ""
               }`}
             >
               <p className="label group-hover:text-creme/70">{tool.num}</p>

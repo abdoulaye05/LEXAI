@@ -17,6 +17,7 @@ const VALID_TOOLS: ToolId[] = [
   "analyse",
   "mise-en-demeure",
   "clause",
+  "conclusions",
 ];
 
 // Active le mock tant qu'on n'a pas une vraie clé Anthropic dans .env.local

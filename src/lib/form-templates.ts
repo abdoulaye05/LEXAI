@@ -271,6 +271,56 @@ export const FORM_TEMPLATES: FormTemplate[] = [
       document: "[COLLEZ ICI LE TEXTE INTÉGRAL DU PROTOCOLE]",
     },
   },
+
+  // ═══════════════════════════ CONCLUSIONS ═══════════════════════════
+  {
+    id: "conclusions-prudhommes-salarie",
+    toolId: "conclusions",
+    title: "Prud'hommes — licenciement sans cause",
+    description:
+      "Conclusions du salarié devant le Conseil de prud'hommes contestant le bien-fondé d'un licenciement pour cause personnelle.",
+    category: "Droit social",
+    values: {
+      juridiction: "Conseil de prud'hommes",
+      position: "demandeur",
+      client:
+        "[NOM PRÉNOM SALARIÉ], demeurant [ADRESSE], né(e) le [DATE] à [LIEU], demandeur",
+      adverse:
+        "La société [RAISON SOCIALE EMPLOYEUR], [forme juridique] au capital de [MONTANT] €, dont le siège social est situé [ADRESSE], immatriculée au RCS de [VILLE] sous le n° [SIREN], représentée par [REPRÉSENTANT], défenderesse",
+      procedure:
+        "RG n° [À COMPLÉTER], section [encadrement / industrie / commerce / activités diverses], audience de jugement du [DATE]",
+      faits:
+        "1) Embauché le [DATE D'EMBAUCHE] en qualité de [FONCTION] (Pièce n° 1 — contrat de travail). 2) Notification du licenciement par lettre du [DATE] visant des motifs [PRÉCISER LES GRIEFS]. 3) Convocation à l'entretien préalable du [DATE]. 4) Saisine du Conseil de prud'hommes le [DATE].",
+      moyens:
+        "1) Sur l'absence de cause réelle et sérieuse (art. L. 1232-1 et L. 1235-1 C. trav.) : les griefs invoqués ne sont ni matériellement vérifiables ni objectifs. 2) Sur l'indemnité pour licenciement sans cause réelle et sérieuse (art. L. 1235-3) : barème Macron applicable. 3) Sur le rappel d'heures supplémentaires (art. L. 3171-4). 4) Sur l'indemnité compensatrice de congés payés. 5) Subsidiairement, sur l'irrégularité de procédure (art. L. 1235-2).",
+      demandes:
+        "DIRE ET JUGER le licenciement dépourvu de cause réelle et sérieuse. CONDAMNER l'employeur au paiement de [MONTANT] € d'indemnité pour licenciement sans cause réelle et sérieuse, [MONTANT] € de rappel d'heures supplémentaires, [MONTANT] € de congés payés afférents, [MONTANT] € au titre de l'article 700, dépens, exécution provisoire de droit pour les chefs visés à l'article R. 1454-28 C. trav.",
+    },
+  },
+  {
+    id: "conclusions-defendeur-impaye",
+    toolId: "conclusions",
+    title: "Tribunal de commerce — défendeur facture contestée",
+    description:
+      "Conclusions du défendeur devant le Tribunal de commerce contestant une demande en paiement d'une facture, sur le fondement de prestations non conformes.",
+    category: "Contentieux commercial",
+    values: {
+      juridiction: "Tribunal de commerce",
+      position: "défendeur",
+      client:
+        "La SAS [RAISON SOCIALE], capital [MONTANT] €, siège [ADRESSE], RCS [VILLE] n° [SIREN], représentée par [NOM, QUALITÉ], défenderesse",
+      adverse:
+        "La société [RAISON SOCIALE DEMANDERESSE], [forme juridique], siège [ADRESSE], RCS [VILLE] n° [SIREN], représentée par [NOM], demanderesse",
+      procedure:
+        "RG n° [À COMPLÉTER], chambre [À PRÉCISER], audience du [DATE]. Assignation du [DATE] tendant au paiement de [MONTANT] €.",
+      faits:
+        "1) Conclusion d'un contrat de prestations en date du [DATE] (Pièce n° 1). 2) Livraison partielle et non conforme constatée le [DATE] (Pièce n° 2 — constat d'huissier). 3) Réclamations adressées par la concluante les [DATES] (Pièces n° 3 et 4). 4) Émission par la demanderesse de la facture litigieuse n° [NUMÉRO] du [DATE] (Pièce n° 5). 5) Contestation motivée de la concluante (Pièce n° 6).",
+      moyens:
+        "1) Sur l'exception d'inexécution (art. 1219 C. civ.) : la facture est non exigible tant que la prestation n'est pas conforme. 2) Sur la mauvaise foi de la demanderesse (art. 1104 C. civ.). 3) À titre reconventionnel, sur le préjudice subi du fait des prestations défectueuses (art. 1217 et 1231-1 C. civ.). 4) Subsidiairement, sur la modération du quantum demandé.",
+      demandes:
+        "DÉBOUTER la demanderesse de l'ensemble de ses demandes. RECONVENTIONNELLEMENT, CONDAMNER la demanderesse au paiement de [MONTANT] € de dommages-intérêts pour exécution défectueuse. CONDAMNER la demanderesse à [MONTANT] € au titre de l'article 700 CPC, aux entiers dépens, et ORDONNER l'exécution provisoire.",
+    },
+  },
 ];
 
 export function getTemplatesForTool(toolId: ToolId): FormTemplate[] {
