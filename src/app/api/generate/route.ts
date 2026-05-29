@@ -36,6 +36,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
+  // 1bis. Rate-limit anti-abus — 5 générations max par minute glissante.
+  // Sans ça, un compte compromis sur le plan cabinet (99999 docs/mois) peut
+  // brûler tout le budget Anthropic en quelques minutes.
+  const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
+  const { count: recentCount, error: rateError } = await supabase
+    .from("generations")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("created_at", oneMinuteAgo);
+
+  if (rateError) {
+    return NextResponse.json(
+      { error: "rate_check_failed", detail: rateError.message },
+      { status: 500 }
+    );
+  }
+  if ((recentCount ?? 0) >= 5) {
+    return NextResponse.json(
+      {
+        error: "rate_limited",
+        message:
+          "Vous avez lancé trop de générations en peu de temps. Patientez une minute avant de relancer.",
+      },
+      { status: 429 }
+    );
+  }
+
   // 2. Body validation
   let body: { tool?: string; fields?: Record<string, string> };
   try {
