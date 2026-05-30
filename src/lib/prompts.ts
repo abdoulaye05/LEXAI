@@ -1,9 +1,8 @@
-export type ToolId =
-  | "contrat"
-  | "analyse"
-  | "mise-en-demeure"
-  | "clause"
-  | "conclusions";
+// Re-export du ToolId canonique défini dans src/types/database.ts.
+// Tous les autres modules importent ToolId depuis ce fichier ; on garde
+// donc l'export ici pour ne pas casser la chaîne d'imports.
+export type { ToolId } from "@/types/database";
+import type { ToolId } from "@/types/database";
 
 const BASE_IDENTITY = `Tu es LexAI, assistant juridique expert en droit OHADA et en droit national des États membres de l'Espace OHADA (Guinée, Côte d'Ivoire, Sénégal, Cameroun, Mali, Burkina Faso, Bénin, Togo, Niger, RCA, Tchad, Gabon, Congo-Brazzaville, RDC, Guinée-Bissau, Guinée équatoriale, Comores). Tu es conçu pour et par des avocats des barreaux d'Afrique francophone, principalement des cabinets pratiquant le droit des affaires.
 

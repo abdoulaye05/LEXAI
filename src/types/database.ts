@@ -1,7 +1,16 @@
 // Types Database écrits à la main pour LexAI.
 // À remplacer plus tard par : pnpm dlx supabase gen types typescript --linked > src/types/database.ts
 
-export type ToolId = "contrat" | "analyse" | "mise-en-demeure" | "clause";
+// Source de vérité unique pour ToolId — doit rester aligné avec le CHECK
+// constraint de la colonne `tool` dans public.generations (voir migrations
+// 20260410120000_initial_schema.sql et 20260518100000_add_conclusions_tool.sql).
+// Le fichier src/lib/prompts.ts re-exporte ce type pour pratique d'import.
+export type ToolId =
+  | "contrat"
+  | "analyse"
+  | "mise-en-demeure"
+  | "clause"
+  | "conclusions";
 export type GenerationStatus = "streaming" | "done" | "error";
 export type UserRole = "solo" | "cabinet_admin" | "cabinet_member";
 export type Plan = "solo" | "cabinet" | "enterprise";

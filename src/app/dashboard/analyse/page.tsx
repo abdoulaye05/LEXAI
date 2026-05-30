@@ -10,7 +10,7 @@ const config: ToolConfig = {
   subtitle: "Analyse et détection de risques",
   title: "Auditez un document",
   description:
-    "Collez le contenu d'un contrat, d'une CGV ou d'un protocole. LexAI identifie les clauses à risque, les non-conformités et propose des reformulations.",
+    "Collez le contenu d'un contrat, d'une CGV ou d'un protocole — OU téléversez directement le PDF (scanné ou natif, OCR automatique). LexAI identifie les clauses à risque, les non-conformités au droit OHADA et propose des reformulations.",
   submitLabel: "Lancer l'analyse",
   outputFilename: "analyse",
   emptyTitle: "Une lecture juridique sans angle mort.",
@@ -44,12 +44,12 @@ const config: ToolConfig = {
     },
     {
       name: "document",
-      label: "Contenu du document",
-      type: "textarea",
+      label: "Document à analyser",
+      type: "document-input",
       required: true,
       rows: 16,
       placeholder:
-        "Collez ici le texte intégral du document à analyser…",
+        "Collez ici le texte intégral du document à analyser, ou basculez sur l'onglet 'Téléverser un PDF' au-dessus pour glisser le fichier directement.",
     },
   ],
 };

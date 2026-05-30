@@ -6,8 +6,15 @@ import {
   type ToolId,
 } from "@/lib/prompts";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { MOCK_TEMPLATES, estimateTokens } from "@/lib/mock-templates";
 import { computeCostEur } from "@/lib/cost";
+
+// Préfixe utilisé par le composant DocumentInput côté client pour signaler
+// qu'un champ contient un PDF uploadé sur Supabase Storage (bucket
+// 'analyse-documents') et non du texte brut. Le path qui suit est de la
+// forme {user_id}/{timestamp}-{rand}-{filename}.pdf.
+const STORAGE_PREFIX = "STORAGE_PATH::";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -82,6 +89,48 @@ export async function POST(request: NextRequest) {
 
   const toolId = tool as ToolId;
   const system = SYSTEM_PROMPTS[toolId];
+
+  // 2bis. Détection PDF — si un champ contient le préfixe STORAGE_PATH::,
+  // on récupère le PDF depuis Supabase Storage pour l'envoyer en multimodal
+  // à Claude. Vérification stricte de l'ownership du path (sécurité).
+  let pdfBase64: string | null = null;
+  let pdfFileName: string | null = null;
+
+  for (const [key, value] of Object.entries(fields)) {
+    if (typeof value !== "string" || !value.startsWith(STORAGE_PREFIX)) continue;
+
+    const pdfPath = value.slice(STORAGE_PREFIX.length);
+
+    // Garde-fou : le path DOIT commencer par {user.id}/ (RLS-equivalent applicatif)
+    if (!pdfPath.startsWith(`${user.id}/`)) {
+      return NextResponse.json(
+        { error: "forbidden_path", detail: "PDF path does not match user" },
+        { status: 403 }
+      );
+    }
+
+    const admin = createAdminClient();
+    const { data: pdfBlob, error: pdfError } = await admin.storage
+      .from("analyse-documents")
+      .download(pdfPath);
+
+    if (pdfError || !pdfBlob) {
+      return NextResponse.json(
+        { error: "pdf_fetch_failed", detail: pdfError?.message },
+        { status: 500 }
+      );
+    }
+
+    const arrayBuffer = await pdfBlob.arrayBuffer();
+    pdfBase64 = Buffer.from(arrayBuffer).toString("base64");
+    pdfFileName = pdfPath.split("/").pop() ?? "document.pdf";
+
+    // Remplace la valeur du champ par une mention lisible — Claude verra le PDF
+    // en plus de ce texte dans son content.
+    fields[key] = `[Document PDF téléversé : ${pdfFileName} — analyse multimodale via Claude]`;
+    break; // un seul PDF par génération
+  }
+
   const userMessage = buildUserMessage(toolId, fields);
 
   // 3. Quota mensuel — appelle la fonction SQL atomique
@@ -157,11 +206,27 @@ export async function POST(request: NextRequest) {
           tokensOut = estimateTokens(template);
         } else {
           // ───── MODE ANTHROPIC RÉEL ─────
+          // Si un PDF a été téléversé, on l'envoie en mode multimodal :
+          // content = [PDF (base64), texte (instructions)]. Sinon, simple texte.
+          const userContent = pdfBase64
+            ? ([
+                {
+                  type: "document" as const,
+                  source: {
+                    type: "base64" as const,
+                    media_type: "application/pdf" as const,
+                    data: pdfBase64,
+                  },
+                },
+                { type: "text" as const, text: userMessage },
+              ])
+            : userMessage;
+
           const anthropicStream = anthropic.messages.stream({
             model: MODEL,
             max_tokens: 4096,
             system,
-            messages: [{ role: "user", content: userMessage }],
+            messages: [{ role: "user", content: userContent }],
           });
 
           for await (const event of anthropicStream) {
@@ -222,6 +287,7 @@ export async function POST(request: NextRequest) {
       "Cache-Control": "no-store",
       "X-Accel-Buffering": "no",
       "X-LexAI-Mode": useMock ? "mock" : "anthropic",
+      "X-LexAI-Input-Type": pdfBase64 ? "pdf" : "text",
       "X-LexAI-Generation-Id": generationId,
     },
   });

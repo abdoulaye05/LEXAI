@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getTemplatesForTool } from "@/lib/form-templates";
 import type { ToolId } from "@/lib/prompts";
+import { createClient } from "@/lib/supabase/client";
 
 export type Field = {
   name: string;
   label: string;
-  type: "text" | "textarea" | "select";
+  type: "text" | "textarea" | "select" | "document-input";
   placeholder?: string;
   required?: boolean;
   rows?: number;
@@ -359,6 +360,230 @@ function FieldRenderer({
             </option>
           ))}
         </select>
+      )}
+
+      {field.type === "document-input" && (
+        <DocumentInput
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DocumentInput — champ spécial pour l'outil "Analyse de risques" qui permet
+// soit de coller du texte, soit de téléverser un PDF (Claude Sonnet 4.5 lit
+// les PDF nativement en mode multimodal, OCR inclus pour les scans).
+//
+// Convention de stockage dans values[field.name] :
+//   - chaîne classique = texte collé
+//   - "STORAGE_PATH::<path>" = PDF uploadé sur Supabase Storage
+// L'API /api/generate détecte le préfixe et bascule en mode multimodal.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const STORAGE_PREFIX = "STORAGE_PATH::";
+
+function DocumentInput({
+  field,
+  value,
+  onChange,
+  disabled,
+}: {
+  field: Field;
+  value: string;
+  onChange: (v: string) => void;
+  disabled: boolean;
+}) {
+  const isPdfMode = value.startsWith(STORAGE_PREFIX);
+  const [mode, setMode] = useState<"text" | "pdf">(isPdfMode ? "pdf" : "text");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [pdfFileName, setPdfFileName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Si la value contient déjà un PDF (ex. au reload), récupère le nom de fichier
+  useEffect(() => {
+    if (isPdfMode && !pdfFileName) {
+      const path = value.slice(STORAGE_PREFIX.length);
+      setPdfFileName(path.split("/").pop() ?? "document.pdf");
+    }
+  }, [isPdfMode, value, pdfFileName]);
+
+  async function handlePdfUpload(file: File) {
+    setUploadError(null);
+
+    if (file.type !== "application/pdf") {
+      setUploadError("Seuls les fichiers PDF sont acceptés.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError("Fichier trop volumineux (maximum 10 Mo).");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const supabase = createClient();
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        setUploadError("Session expirée. Reconnectez-vous.");
+        return;
+      }
+
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 60);
+      const path = `${userData.user.id}/${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2, 8)}-${safeName}`;
+
+      const { error } = await supabase.storage
+        .from("analyse-documents")
+        .upload(path, file, {
+          contentType: "application/pdf",
+          upsert: false,
+        });
+
+      if (error) {
+        setUploadError(`Erreur d'upload : ${error.message}`);
+        return;
+      }
+
+      setPdfFileName(file.name);
+      onChange(`${STORAGE_PREFIX}${path}`);
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Erreur inconnue à l'upload."
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function handleModeSwitch(newMode: "text" | "pdf") {
+    setMode(newMode);
+    onChange("");
+    setPdfFileName(null);
+    setUploadError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function handleRemovePdf() {
+    setPdfFileName(null);
+    onChange("");
+    setUploadError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  const textValue = isPdfMode ? "" : value;
+
+  return (
+    <div className="mt-2">
+      {/* Tabs Coller texte / Téléverser PDF */}
+      <div className="flex border border-ink">
+        <button
+          type="button"
+          onClick={() => handleModeSwitch("text")}
+          disabled={disabled}
+          className={`flex-1 py-3 font-sans text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
+            mode === "text"
+              ? "bg-ink text-creme"
+              : "bg-creme text-ink hover:bg-ink/5"
+          } disabled:opacity-50`}
+        >
+          Coller le texte
+        </button>
+        <button
+          type="button"
+          onClick={() => handleModeSwitch("pdf")}
+          disabled={disabled}
+          className={`flex-1 border-l border-ink py-3 font-sans text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
+            mode === "pdf"
+              ? "bg-ink text-creme"
+              : "bg-creme text-ink hover:bg-ink/5"
+          } disabled:opacity-50`}
+        >
+          Téléverser un PDF
+        </button>
+      </div>
+
+      {/* Mode texte : textarea classique */}
+      {mode === "text" && (
+        <textarea
+          id={field.name}
+          required={field.required}
+          placeholder={field.placeholder}
+          value={textValue}
+          disabled={disabled}
+          rows={field.rows ?? 16}
+          onChange={(e) => onChange(e.target.value)}
+          className="field mt-3 resize-none py-3 text-[17px] leading-[1.6]"
+        />
+      )}
+
+      {/* Mode PDF : zone d'upload */}
+      {mode === "pdf" && (
+        <div className="mt-3 border border-ink p-6">
+          {!pdfFileName && (
+            <>
+              <p className="font-serif text-lg leading-tight">
+                Glissez votre PDF ici, ou
+              </p>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={disabled || uploading}
+                className="mt-3 font-sans text-[11px] font-bold uppercase tracking-[0.12em] text-ink underline-offset-4 hover:text-accent hover:underline disabled:opacity-50"
+              >
+                {uploading ? "Téléversement en cours…" : "Parcourir →"}
+              </button>
+              <p className="mt-4 text-xs text-muted">
+                Format accepté : PDF natif ou scanné (OCR automatique par
+                Claude). Maximum 10 Mo.
+              </p>
+            </>
+          )}
+
+          {pdfFileName && (
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <p className="label">PDF prêt à analyser</p>
+                <p className="mt-2 truncate font-serif text-lg leading-tight">
+                  {pdfFileName}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleRemovePdf}
+                disabled={disabled}
+                className="shrink-0 font-sans text-[11px] font-bold uppercase tracking-[0.12em] text-accent underline-offset-4 hover:underline disabled:opacity-50"
+              >
+                Retirer
+              </button>
+            </div>
+          )}
+
+          {uploadError && (
+            <p className="mt-4 border-l-2 border-accent pl-3 text-sm text-accent">
+              {uploadError}
+            </p>
+          )}
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/pdf"
+            disabled={disabled || uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handlePdfUpload(file);
+            }}
+            className="hidden"
+          />
+        </div>
       )}
     </div>
   );
