@@ -13,6 +13,7 @@ const TOOL_LABELS: Record<ToolId, string> = {
   analyse: "Analyse",
   "mise-en-demeure": "Mise en demeure",
   clause: "Clause",
+  conclusions: "Conclusions",
 };
 
 function formatDateTime(iso: string): string {

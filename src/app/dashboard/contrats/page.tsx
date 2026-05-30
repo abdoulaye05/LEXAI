@@ -10,7 +10,7 @@ const config: ToolConfig = {
   subtitle: "Génération de contrats",
   title: "Rédigez un contrat complet",
   description:
-    "Décrivez les parties, l'objet et le contexte. LexAI rédige un contrat structuré en articles numérotés, référencé au Code civil.",
+    "Décrivez les parties, l'objet et le contexte. LexAI rédige un contrat structuré en articles numérotés, conforme aux Actes Uniformes OHADA (AU DCG, AUSCGIE, AU Sûretés).",
   submitLabel: "Générer le contrat",
   outputFilename: "contrat",
   emptyTitle: "Un contrat prêt à être signé.",
@@ -43,7 +43,7 @@ const config: ToolConfig = {
       required: true,
       rows: 4,
       placeholder:
-        "Ex. : SAS ACME, capital 10 000 €, siège 12 rue de Rivoli 75001 Paris, RCS Paris 853 111 222, représentée par M. Dupont, président — et M. Martin, consultant indépendant, n° SIRET…",
+        "Ex. : SOTRAGUI SARL, capital 50 000 000 GNF, siège 12 boulevard du Commerce, Kaloum, Conakry, RCCM/GN-CKY/2024-B-001234, représentée par M. Diallo, gérant — et ABIDJAN TECH SARL, capital 5 000 000 FCFA, siège Plateau Abidjan, RCCM/CI-ABJ/2023-B-005678…",
     },
     {
       name: "objet",

@@ -10,7 +10,7 @@ const config: ToolConfig = {
   subtitle: "Clauses sur mesure",
   title: "Rédigez une clause calibrée",
   description:
-    "Indiquez le type de clause et son contexte d'application. LexAI produit une rédaction conforme au droit français, avec justification juridique et points de vigilance.",
+    "Indiquez le type de clause et son contexte d'application. LexAI produit une rédaction conforme au droit OHADA (Actes Uniformes) et au droit national applicable, avec justification juridique et points de vigilance.",
   submitLabel: "Rédiger la clause",
   outputFilename: "clause",
   emptyTitle: "Des clauses taillées pour votre dossier.",
@@ -24,6 +24,8 @@ const config: ToolConfig = {
       required: true,
       placeholder: "Choisir une clause",
       options: [
+        { value: "Arbitrage CCJA", label: "Arbitrage CCJA" },
+        { value: "Sûreté (cautionnement / gage / nantissement / hypothèque)", label: "Sûreté OHADA" },
         { value: "Non-concurrence", label: "Non-concurrence" },
         { value: "Non-sollicitation", label: "Non-sollicitation" },
         { value: "Confidentialité", label: "Confidentialité" },
@@ -33,8 +35,9 @@ const config: ToolConfig = {
         { value: "Pénalité", label: "Clause pénale" },
         { value: "Résolution", label: "Résolution" },
         { value: "Propriété intellectuelle", label: "Propriété intellectuelle" },
-        { value: "Réserve de propriété", label: "Réserve de propriété" },
+        { value: "Réserve de propriété", label: "Réserve de propriété (AU Sûretés)" },
         { value: "Hardship", label: "Imprévision / hardship" },
+        { value: "Cession de parts sociales (AUSCGIE)", label: "Cession de parts OHADA" },
         { value: "Autre", label: "Autre (préciser)" },
       ],
     },
@@ -45,7 +48,7 @@ const config: ToolConfig = {
       required: true,
       rows: 4,
       placeholder:
-        "Ex. : contrat de prestation de services B2B entre une agence de marketing et un grand compte ; la clause protège l'agence contre le débauchage de ses salariés.",
+        "Ex. : contrat de fourniture entre une SARL guinéenne et un fournisseur ivoirien ; clause destinée à régir le règlement des litiges nés du contrat dans l'espace OHADA.",
     },
     {
       name: "contraintes",
@@ -53,7 +56,7 @@ const config: ToolConfig = {
       type: "textarea",
       rows: 4,
       placeholder:
-        "Ex. : durée de 24 mois post-contractuels, périmètre : Île-de-France, contrepartie financière si applicable, sanctions en cas de violation…",
+        "Ex. : arbitrage CCJA, siège Abidjan, droit OHADA + droit guinéen subsidiaire, langue française — OU sûreté (cautionnement / gage / nantissement) conforme AU Sûretés — OU clause de non-concurrence, périmètre et contrepartie selon Code du travail national applicable.",
     },
   ],
 };

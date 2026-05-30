@@ -16,7 +16,7 @@ const PLAN_LABELS: Record<Plan, string> = {
 
 // Heuristiques pour l'analytics personnel
 const MINUTES_SAVED_PER_DOC = 40; // estimation moyenne : 40 min de rédaction économisées
-const LAWYER_HOURLY_RATE = 180; // € TTC, tarif horaire médian avocat parisien
+const LAWYER_HOURLY_RATE = 80; // € TTC, tarif horaire médian avocat OHADA (~52 000 FCFA / ~700 000 GNF)
 
 function formatNumber(n: number): string {
   return new Intl.NumberFormat("fr-FR").format(n);
@@ -207,7 +207,7 @@ export default async function DashboardPage() {
             {
               num: "01",
               title: "Générer un contrat",
-              desc: "Décrivez le contexte. Obtenez un contrat structuré en articles numérotés, référencé au Code civil.",
+              desc: "Décrivez le contexte. Obtenez un contrat structuré en articles numérotés, référencé aux Actes Uniformes OHADA.",
               href: "/dashboard/contrats",
               fullWidth: false,
             },

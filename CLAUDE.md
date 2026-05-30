@@ -7,10 +7,11 @@ Fichier auto-chargé par Claude Code au début de chaque session. Contient le co
 
 ## Projet en une phrase
 
-**LexAI** = SaaS legal IA pour avocats français. 4 outils (analyse contrat, rédaction contrat, mise en demeure, clauses). Founder solo étudiant. **Objectif business : 15-20 k€ MRR minimum**.
+**LexAI** = SaaS legal IA pour avocats **OHADA** (17 États d'Afrique francophone), pivot stratégique depuis le marché français le 2026-05-18. 5 outils (analyse contrat, rédaction contrat, mise en demeure, clauses, conclusions). Founder solo étudiant, père avocat à Conakry = beta-testeur jour 1. **Objectif business : 15-20 k€ MRR minimum** via 200-400 cabinets africains francophones à 30-150€/mois.
 
 - **Site live** : https://lexai-dun.vercel.app
 - **Repo branch principale** : `claude/supabase-auth-setup-I21O8`
+- **Pays par défaut** : République de Guinée (beta). Marché cible long terme : Espace OHADA + Afrique francophone non-OHADA (Maroc, Tunisie, Algérie, Madagascar).
 - **Le nom "LexAI" sera renommé** (collision marque) — voir mémoire `project_rename_pending.md`
 
 ---
@@ -30,6 +31,19 @@ Fichier auto-chargé par Claude Code au début de chaque session. Contient le co
 | Hosting | Vercel région fra1 (Frankfurt) | Données EU |
 
 ---
+
+## ⚖️ Cadre juridique cible — OHADA (CRITIQUE)
+
+**JAMAIS de référence au droit français** (Code civil, CPC, Légifrance, jurisprudence Chronopost / Salembier) dans les prompts, mock templates ou UI sauf renvoi exprès d'un Acte Uniforme OHADA.
+
+**Cadre normatif à utiliser** :
+- **10 Actes Uniformes OHADA** : AU DCG (Droit Commercial Général), AUSCGIE (Sociétés Commerciales et GIE), AU Sûretés, AU Recouvrement (Procédures Simplifiées de Recouvrement et Voies d'Exécution), AU PC (Procédures Collectives), AU Arbitrage + Règlement CCJA, SYSCOHADA, AU CTMR, AU Coopératives, AU Médiation.
+- **CCJA** (Cour Commune de Justice et d'Arbitrage, Abidjan) = juridiction suprême OHADA.
+- **Droit national** : Code de procédure civile guinéen par défaut (mais multi-pays OHADA à terme). Pays par pays pour droit du travail, droit pénal, droit foncier.
+- **Monnaies** : FCFA (UEMOA/CEMAC), GNF (Guinée), CDF (RDC), EUR/USD pour international uniquement.
+- **Juridictions exemples** : Tribunal de Commerce de Conakry, Tribunal de Première Instance de Conakry I, Cour d'Appel de Conakry, CCJA d'Abidjan.
+
+**Ne JAMAIS inventer** : jurisprudence CCJA (n° d'arrêt), numéros d'articles d'AU. En cas de doute, écrire "[article à vérifier]".
 
 ## ⚠️ Direction visuelle — CRITIQUE
 
@@ -151,14 +165,14 @@ pnpm lint            # ESLint (ignoreDuringBuilds=true actuellement)
 
 ---
 
-## État actuel (à jour 2026-05-12)
+## État actuel (à jour 2026-05-18)
 
 ### ✅ Implémenté
 - Auth Supabase (signup + email confirm + login + reset-password)
-- Dashboard avec 4 KPI + 4 outils + sidebar quotas
-- 4 outils IA (analyse, contrat, mise-en-demeure, clauses) en streaming via `/api/generate`
+- Dashboard avec 4 KPI + 5 outils + sidebar quotas
+- 5 outils IA (analyse, contrat, mise-en-demeure, clauses, **conclusions**) en streaming via `/api/generate`
 - Historique des générations + page détail + export PDF/MD
-- PDF white-label par plan (Solo/Cabinet/Enterprise)
+- PDF white-label par plan (Solo/Cabinet/Enterprise) + **choix fond crème ou blanc**
 - Réglages cabinet (identité + logo upload Storage)
 - Stripe Checkout + Webhook + Customer Portal
 - Console admin complète (overview, users, generations, subscriptions, costs)
@@ -166,15 +180,22 @@ pnpm lint            # ESLint (ignoreDuringBuilds=true actuellement)
 - Cookie banner
 - Migration sécurité is_admin (appliquée 2026-05-12)
 - Rate-limit 5/min sur /api/generate
+- **Pivot OHADA** (2026-05-18) : tous les system prompts, mock templates et UI réécrits pour droit OHADA / Guinée
 
 ### ⚠️ Blockers vente (P0/P1 non réglés)
-- Anthropic en mode mock (clé placeholder)
-- Stripe en mode test → l'avocat verra "TEST MODE" dans Checkout
-- Mentions légales contiennent `[À COMPLÉTER]` → infraction LCEN
+- Anthropic en mode mock (clé placeholder) — à activer pour beta père en Guinée
+- Stripe en mode test → "TEST MODE" affiché dans Checkout
+- Paiement Mobile Money pas intégré (Orange Money / Wave) — critique Afrique
+- Mentions légales contiennent `[À COMPLÉTER]`
 - Domaine custom pas acheté (URL = lexai-dun.vercel.app)
-- Pas de page `/pricing` publique
+- Pas de page `/pricing` publique avec tier Africa-friendly (29-79-199 €/mois)
 - Pas de bouton "Supprimer mon compte" (RGPD)
 - Email contact `contact@lexai.app` bounce partout
 
-### 📋 Roadmap
+### 📋 Roadmap OHADA
+- **Phase 2** : 3 outils OHADA-natifs killer (Injonction de payer + voies d'exécution AU Recouvrement, Statuts SARL OHADA conformes AUSCGIE, Acte de sûreté AU Sûretés)
+- **Phase 3** (le moat) : Base de jurisprudence CCJA (~3000 arrêts depuis 2001) avec recherche vectorielle Supabase pgvector
+- **Phase 4** : Paiement Mobile Money (Wave Sénégal/CI, Orange Money Guinée/Mali/Cameroun) + landing OHADA
+- **Phase 5** : Beta père + 3-5 cabinets Guinée, programme "Founding Lawyers Africa" 50% remise à vie
+
 Mémoires `project_*.md` (voir `~/.claude/projects/-Users-abdoulaye-Downloads-LEXAI/memory/`).

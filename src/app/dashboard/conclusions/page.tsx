@@ -63,7 +63,7 @@ const config: ToolConfig = {
       required: true,
       rows: 3,
       placeholder:
-        "Ex. : SAS ACME, capital 50 000 €, siège 12 rue de Rivoli 75001 Paris, RCS Paris 853 111 222, représentée par M. Dupont, président, demandeur",
+        "Ex. : SOTRAGUI SARL, capital 50 000 000 GNF, siège 12 boulevard du Commerce, Kaloum, Conakry, RCCM/GN-CKY/2024-B-001234, représentée par M. Diallo, gérant, demanderesse",
     },
     {
       name: "adverse",
@@ -72,7 +72,7 @@ const config: ToolConfig = {
       required: true,
       rows: 3,
       placeholder:
-        "Ex. : M. Pierre Martin, demeurant 5 avenue de l'Opéra 75002 Paris, défendeur",
+        "Ex. : SOCIÉTÉ ACME-GN SA, capital 100 000 000 GNF, siège 12 boulevard de l'Indépendance, Matam, Conakry, RCCM/GN-CKY/2018-B-007890, représentée par Mme Barry, défenderesse",
     },
     {
       name: "procedure",
@@ -97,7 +97,7 @@ const config: ToolConfig = {
       required: true,
       rows: 6,
       placeholder:
-        "Ex. : 1) Inexécution contractuelle au sens de l'article 1217 du Code civil. 2) Demande de dommages-intérêts (art. 1231-1). 3) Subsidiairement, résolution judiciaire (art. 1227).",
+        "Ex. : 1) Inexécution contractuelle — articles 234 et suivants de l'Acte Uniforme relatif au Droit Commercial Général. 2) Demande de dommages-intérêts pour préjudice financier et commercial. 3) Subsidiairement, résolution aux torts exclusifs de la défenderesse. 4) Voies d'exécution AU Recouvrement.",
     },
     {
       name: "demandes",
@@ -106,7 +106,7 @@ const config: ToolConfig = {
       required: true,
       rows: 5,
       placeholder:
-        "Ex. : Condamnation au paiement de 24 000 € au titre du contrat impayé. Indemnité de 5 000 € pour préjudice. Article 700 : 3 500 €. Dépens. Exécution provisoire.",
+        "Ex. : Condamnation au paiement de 28 000 000 GNF au titre du contrat impayé. Astreinte de 500 000 GNF/jour. Subsidiairement, résolution aux torts exclusifs. EN TOUT ÉTAT : frais et dépens, exécution provisoire nonobstant toute voie de recours.",
     },
   ],
 };

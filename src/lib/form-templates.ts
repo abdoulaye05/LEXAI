@@ -272,6 +272,117 @@ export const FORM_TEMPLATES: FormTemplate[] = [
     },
   },
 
+  // ═══════════════════════════ OHADA — CONTRATS ═══════════════════════════
+  {
+    id: "contrat-prestation-ohada",
+    toolId: "contrat",
+    title: "Prestation interrégionale OHADA (Guinée ↔ CI)",
+    description:
+      "Contrat de prestation entre une SARL guinéenne et un prestataire ivoirien, avec clause d'arbitrage CCJA.",
+    category: "OHADA — Affaires",
+    values: {
+      type: "Prestation de services",
+      parties:
+        "La société [RAISON SOCIALE GUINÉENNE] SARL, capital [MONTANT] GNF, siège [ADRESSE Conakry], RCCM/GN-CKY/[ANNÉE]-B-[NUMÉRO], représentée par [NOM, QUALITÉ] — et la société [RAISON SOCIALE IVOIRIENNE] SARL, capital [MONTANT] FCFA, siège [ADRESSE Abidjan], RCCM/CI-ABJ/[ANNÉE]-B-[NUMÉRO], représentée par [NOM, QUALITÉ].",
+      objet:
+        "Mission de [DESCRIPTION PRÉCISE] pour le compte du CLIENT en République de Guinée, conformément au cahier des charges annexé.",
+      duree:
+        "12 mois à compter de la signature, renouvelable par avenant écrit.",
+      montant:
+        "Forfait global de [MONTANT] FCFA HT, payable selon échéancier mensuel. Intérêts de retard au taux BCEAO + 2 points en cas de défaut de paiement.",
+      particularites:
+        "Clause de confidentialité 5 ans. Sûreté en garantie (cautionnement bancaire). Clause d'arbitrage CCJA, siège Abidjan, droit OHADA + droit guinéen subsidiaire.",
+    },
+  },
+  {
+    id: "contrat-statuts-sarl-ohada",
+    toolId: "contrat",
+    title: "Statuts SARL OHADA (Guinée)",
+    description:
+      "Projet de statuts d'une SARL constituée en République de Guinée, conformes à l'AUSCGIE.",
+    category: "OHADA — Sociétés",
+    values: {
+      type: "Statuts de SARL OHADA",
+      parties:
+        "Associé 1 : [NOM PRÉNOM, nationalité, demeurant à ADRESSE Conakry] — Associé 2 : [NOM PRÉNOM, nationalité, demeurant à ADRESSE]. Le cas échéant : associé personne morale [DÉNOMINATION, RCCM].",
+      objet:
+        "Société à responsabilité limitée ayant pour objet en République de Guinée et à l'étranger : [DESCRIPTION DE L'OBJET SOCIAL — activités commerciales précises].",
+      duree:
+        "99 ans à compter de l'immatriculation au RCCM de Conakry, sauf prorogation ou dissolution anticipée.",
+      montant:
+        "Capital social fixé à [MONTANT minimum 1 000 000 FCFA équivalent en GNF] GNF, divisé en [N] parts sociales de [VALEUR NOMINALE] GNF chacune, intégralement souscrites et libérées de moitié à la constitution.",
+      particularites:
+        "Gérance assurée par [NOM] pour 4 ans renouvelables. Cession de parts à des tiers soumise à agrément des associés représentant 3/4 du capital (art. 319 AUSCGIE). Siège social : [ADRESSE Conakry].",
+    },
+  },
+
+  // ═══════════════════════════ OHADA — MISES EN DEMEURE ═══════════════════════════
+  {
+    id: "med-impaye-ohada",
+    toolId: "mise-en-demeure",
+    title: "Impayé commercial + annonce injonction OHADA",
+    description:
+      "Mise en demeure pour défaut de paiement de facture en zone OHADA, annonçant la requête en injonction de payer (AU Recouvrement).",
+    category: "OHADA — Recouvrement",
+    values: {
+      expediteur:
+        "[CABINET / VOTRE SOCIÉTÉ : raison sociale, adresse Conakry, RCCM], représenté par [NOM, QUALITÉ].",
+      destinataire:
+        "[DÉBITEUR : raison sociale OHADA, adresse, RCCM], à l'attention de [NOM, QUALITÉ].",
+      objet:
+        "Défaut de paiement de la facture n° [NUMÉRO] du [DATE] — annonce d'une requête en injonction de payer",
+      faits:
+        "Aux termes d'un contrat / d'une commande du [DATE] (pièce n° 1), nous avons livré / fourni [PRESTATION / MARCHANDISE] à votre société. La facture n° [NUMÉRO] d'un montant de [MONTANT] GNF / FCFA TTC a été émise le [DATE] et est demeurée impayée à son échéance du [DATE].",
+      demande:
+        "Règlement intégral de la somme de [MONTANT] GNF/FCFA TTC, majorée des intérêts de retard au taux BCRG/BCEAO + 2 points depuis le [DATE D'EXIGIBILITÉ]. À défaut, requête en injonction de payer devant le Tribunal de Commerce de [VILLE] sur le fondement des articles 1 et suivants de l'AU portant Procédures Simplifiées de Recouvrement.",
+      delai:
+        "8 jours calendaires à compter de la réception de la présente",
+    },
+  },
+
+  // ═══════════════════════════ OHADA — CLAUSES ═══════════════════════════
+  {
+    id: "clause-arbitrage-ccja",
+    toolId: "clause",
+    title: "Clause compromissoire CCJA",
+    description:
+      "Clause d'arbitrage pour contrat commercial OHADA, soumise au Règlement d'arbitrage de la CCJA, siège Abidjan.",
+    category: "OHADA — Arbitrage",
+    values: {
+      clause: "Arbitrage CCJA",
+      contexte:
+        "Contrat commercial entre une société guinéenne et une société d'un autre État membre OHADA, portant sur [OBJET], avec une valeur du contrat de [MONTANT].",
+      contraintes:
+        "Arbitre unique. Siège : Abidjan. Langue : français. Droit applicable : Actes Uniformes OHADA, droit national subsidiaire. Frais répartis 50/50 puis à la charge de la partie succombante.",
+    },
+  },
+
+  // ═══════════════════════════ OHADA — CONCLUSIONS ═══════════════════════════
+  {
+    id: "conclusions-tcom-recouvrement-ohada",
+    toolId: "conclusions",
+    title: "T. Com Conakry — Recouvrement créance commerciale",
+    description:
+      "Conclusions du demandeur devant le Tribunal de Commerce de Conakry pour recouvrement d'une créance commerciale impayée, fondement AU DCG + AU Recouvrement.",
+    category: "OHADA — Contentieux",
+    values: {
+      juridiction: "Tribunal de Commerce",
+      position: "demandeur",
+      client:
+        "La [RAISON SOCIALE] SARL, capital [MONTANT] GNF, siège [ADRESSE Conakry], RCCM/GN-CKY/[ANNÉE]-B-[NUMÉRO], représentée par [NOM, QUALITÉ], demanderesse",
+      adverse:
+        "La société [RAISON SOCIALE] SA, capital [MONTANT] GNF, siège [ADRESSE], RCCM/GN-CKY/[ANNÉE]-B-[NUMÉRO], représentée par [NOM, QUALITÉ], défenderesse",
+      procedure:
+        "N° du rôle TC/CKY/[ANNÉE]/[NUMÉRO], chambre commerciale, audience du [DATE]. Assignation du [DATE].",
+      faits:
+        "1) Contrat de fourniture du [DATE] (Pièce n° 1). 2) Livraisons partielles, dernière livraison du [DATE] (Pièce n° 2). 3) Émission facture n° [NUMÉRO] du [DATE] pour [MONTANT] GNF (Pièce n° 3). 4) Mise en demeure par exploit d'huissier du [DATE] demeurée infructueuse (Pièce n° 4). 5) Assignation du [DATE] (Pièce n° 5).",
+      moyens:
+        "1) Sur l'inexécution caractérisée — articles 234 et suivants AU DCG. 2) Sur le préjudice subi — préjudice financier, commercial et moral. 3) Subsidiairement, sur la résolution du contrat aux torts exclusifs. 4) Sur les voies d'exécution AU Recouvrement disponibles.",
+      demandes:
+        "DIRE ET JUGER l'inexécution caractérisée. CONDAMNER la défenderesse au paiement de [MONTANT] GNF de dommages-intérêts. ORDONNER l'exécution forcée du contrat sous astreinte de [MONTANT] GNF/jour. Subsidiairement, PRONONCER la résolution aux torts exclusifs. EN TOUT ÉTAT, condamnation aux dépens, exécution provisoire.",
+    },
+  },
+
   // ═══════════════════════════ CONCLUSIONS ═══════════════════════════
   {
     id: "conclusions-prudhommes-salarie",
