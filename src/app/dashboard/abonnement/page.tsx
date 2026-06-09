@@ -8,14 +8,23 @@ export const metadata = {
   title: "Abonnement — LexAI",
 };
 
+type Feature = {
+  label: string;
+  /** Marqué "À venir" dans l'UI quand la feature n'est pas encore livrée. */
+  comingSoon?: boolean;
+};
+
 type PlanCard = {
   num: string;
   id: Plan;
   name: string;
+  /** Prix de référence en EUR (utilisé par Stripe Checkout, source de vérité). */
   price: string;
+  /** Équivalents locaux affichés en sous-ligne — repères pratiques pour le marché OHADA. */
+  priceLocal: string;
   cadence: string;
   audience: string;
-  features: string[];
+  features: Feature[];
   featured?: boolean;
 };
 
@@ -24,34 +33,38 @@ const PLANS: PlanCard[] = [
     num: "01",
     id: "solo",
     name: "Solo",
-    price: "199 €",
+    price: "49 €",
+    priceLocal: "≈ 32 000 FCFA · 420 000 GNF",
     cadence: "/ mois",
     audience: "Avocat indépendant",
     features: [
-      "50 documents générés par mois",
-      "Accès aux 4 outils juridiques",
-      "PDF avec votre logo et identité cabinet",
-      "Bibliothèque personnelle de clauses",
-      "Templates pré-remplis (NDA, CDI, MED…)",
-      "Historique illimité et recherche",
-      "Assistant IA intégré (questions 24/7)",
+      { label: "50 documents générés par mois" },
+      { label: "Accès aux 5 outils juridiques OHADA" },
+      { label: "Templates pré-remplis (statuts SARL, MED, conclusions…)" },
+      { label: "PDF avec votre logo et identité cabinet" },
+      { label: "Choix du fond PDF (crème ou blanc)" },
+      { label: "Téléversement PDF pour analyse (OCR automatique)" },
+      { label: "Historique illimité de vos documents" },
+      { label: "Bibliothèque personnelle de clauses", comingSoon: true },
+      { label: "Recherche dans l'historique", comingSoon: true },
     ],
   },
   {
     num: "02",
     id: "cabinet",
     name: "Cabinet",
-    price: "599 €",
+    price: "99 €",
+    priceLocal: "≈ 65 000 FCFA · 850 000 GNF",
     cadence: "/ mois",
     audience: "Cabinet de taille moyenne",
     features: [
-      "Documents illimités (fair-use)",
-      "Tout du plan Solo",
-      "PDF white-label (LexAI seulement en pied de page)",
-      "Analyse en lot (10 documents d'un coup)",
-      "Comparaison intelligente de versions",
-      "Synthèse automatique de documents longs",
-      "Traduction juridique FR ↔ EN",
+      { label: "Documents illimités (fair-use)" },
+      { label: "Tout du plan Solo" },
+      { label: "PDF white-label (LexAI seulement en pied de page)" },
+      { label: "Analyse en lot (10 documents d'un coup)", comingSoon: true },
+      { label: "Comparaison intelligente de versions", comingSoon: true },
+      { label: "Synthèse automatique de documents longs", comingSoon: true },
+      { label: "Traduction juridique FR ↔ EN", comingSoon: true },
     ],
     featured: true,
   },
@@ -59,17 +72,17 @@ const PLANS: PlanCard[] = [
     num: "03",
     id: "enterprise",
     name: "Enterprise",
-    price: "1 500 €",
+    price: "299 €",
+    priceLocal: "≈ 195 000 FCFA · 2 550 000 GNF",
     cadence: "/ mois",
     audience: "Grand cabinet et direction juridique",
     features: [
-      "Tout du plan Cabinet",
-      "PDF 100 % white-label (aucune mention LexAI)",
-      "Prompts personnalisables en libre-service",
-      "Intégration Google Drive / Dropbox",
-      "Signature électronique intégrée",
-      "Rappels automatiques de suivi",
-      "Accès API (1 000 appels / mois)",
+      { label: "Tout du plan Cabinet" },
+      { label: "PDF 100 % white-label (aucune mention LexAI)" },
+      { label: "Signature électronique intégrée", comingSoon: true },
+      { label: "Rappels automatiques de suivi", comingSoon: true },
+      { label: "Accès API (1 000 appels / mois)", comingSoon: true },
+      { label: "Prompts personnalisables en libre-service", comingSoon: true },
     ],
   },
 ];
@@ -184,6 +197,13 @@ export default async function AbonnementPage({
                 {plan.cadence}
               </span>
             </p>
+            <p
+              className={`mt-2 font-sans text-xs tracking-wide ${
+                plan.featured ? "text-creme/60" : "text-muted"
+              }`}
+            >
+              {plan.priceLocal}
+            </p>
 
             <ul
               className={`mt-10 space-y-3 border-t pt-6 ${
@@ -192,10 +212,23 @@ export default async function AbonnementPage({
             >
               {plan.features.map((f) => (
                 <li
-                  key={f}
-                  className="font-serif text-lg leading-snug"
+                  key={f.label}
+                  className={`font-serif text-lg leading-snug ${
+                    f.comingSoon ? "opacity-60" : ""
+                  }`}
                 >
-                  — {f}
+                  — {f.label}
+                  {f.comingSoon && (
+                    <span
+                      className={`ml-2 inline-block border px-2 py-0.5 align-middle font-sans text-[9px] font-bold uppercase tracking-[0.12em] ${
+                        plan.featured
+                          ? "border-creme/40 text-creme/70"
+                          : "border-accent text-accent"
+                      }`}
+                    >
+                      À venir
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

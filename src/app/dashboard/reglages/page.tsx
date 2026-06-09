@@ -26,7 +26,7 @@ export default async function ReglagesPage() {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "user_id, full_name, cabinet_name, cabinet_address, cabinet_phone, cabinet_email, cabinet_siret, cabinet_website, cabinet_logo_url, bar_id"
+      "user_id, full_name, cabinet_name, cabinet_address, cabinet_phone, cabinet_email, cabinet_siret, cabinet_website, cabinet_logo_url, bar_id, country"
     )
     .eq("user_id", user.id)
     .maybeSingle();
@@ -121,6 +121,27 @@ export default async function ReglagesPage() {
         </div>
       </section>
 
+      {/* Email de connexion (readonly) */}
+      <section className="hairline-b px-10 py-10">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr]">
+          <div>
+            <p className="label">Email de connexion</p>
+            <h2 className="mt-3 font-serif text-2xl leading-tight tracking-tightest">
+              Identifiant du compte.
+            </h2>
+            <p className="mt-4 max-w-sm text-sm text-muted">
+              Cette adresse est votre identifiant. Pour la modifier, contactez
+              le support.
+            </p>
+          </div>
+          <div className="flex items-end">
+            <p className="break-all font-serif text-2xl leading-tight">
+              {user.email}
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Form identité cabinet */}
       <section className="px-10 py-12">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr]">
@@ -137,7 +158,11 @@ export default async function ReglagesPage() {
           <SettingsForm
             userId={user.id}
             initial={{
-              full_name: profile?.full_name ?? "",
+              country: profile?.country ?? "GN",
+              full_name:
+                profile?.full_name && profile.full_name !== user.email
+                  ? profile.full_name
+                  : "",
               cabinet_name: profile?.cabinet_name ?? "",
               cabinet_address: profile?.cabinet_address ?? "",
               cabinet_phone: profile?.cabinet_phone ?? "",

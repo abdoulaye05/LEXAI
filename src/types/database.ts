@@ -34,6 +34,8 @@ export type Profile = {
   cabinet_website: string | null;
   cabinet_logo_url: string | null;
   bar_id: string | null;
+  /** Code ISO-2 du pays OHADA d'exercice (GN par défaut). Voir src/lib/countries.ts. */
+  country: string;
   role: UserRole;
   is_admin: boolean;
   created_at: string;
@@ -76,9 +78,13 @@ export type UsageCredit = {
   count_limit: number;
 };
 
-// Tarifs mensuels HT en euros — utilisés pour calculer le MRR
+// Tarifs mensuels HT en euros — utilisés pour calculer le MRR dans /admin.
+// Calibrés marché OHADA depuis le pivot 2026-05-18 (cf. mémoire project_ohada_pivot).
+// Doivent rester synchronisés avec :
+//   - les Stripe Price IDs en env (STRIPE_PRICE_ID_SOLO/CABINET/ENTERPRISE)
+//   - les prix affichés dans src/app/dashboard/abonnement/page.tsx
 export const PLAN_PRICES_EUR: Record<Plan, number> = {
-  solo: 199,
-  cabinet: 599,
-  enterprise: 1500,
+  solo: 49,
+  cabinet: 99,
+  enterprise: 299,
 };

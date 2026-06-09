@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MOCK_TEMPLATES, estimateTokens } from "@/lib/mock-templates";
 import { computeCostEur } from "@/lib/cost";
+import { buildCountryContext } from "@/lib/countries";
 
 // Préfixe utilisé par le composant DocumentInput côté client pour signaler
 // qu'un champ contient un PDF uploadé sur Supabase Storage (bucket
@@ -88,7 +89,21 @@ export async function POST(request: NextRequest) {
   }
 
   const toolId = tool as ToolId;
-  const system = SYSTEM_PROMPTS[toolId];
+
+  // Lit le pays OHADA d'exercice du cabinet pour adapter le system prompt.
+  // Si le profil n'a pas encore été créé (rare), fallback Guinée par défaut.
+  const { data: profileForCountry } = await supabase
+    .from("profiles")
+    .select("country")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const userCountry = profileForCountry?.country ?? "GN";
+  const countryContext = buildCountryContext(userCountry);
+
+  // Préfixe le system prompt avec le contexte cabinet (pays, monnaie,
+  // juridiction par défaut). Le BASE_IDENTITY OHADA traite ensuite la suite.
+  const system = `${countryContext}\n\n${SYSTEM_PROMPTS[toolId]}`;
 
   // 2bis. Détection PDF — si un champ contient le préfixe STORAGE_PATH::,
   // on récupère le PDF depuis Supabase Storage pour l'envoyer en multimodal

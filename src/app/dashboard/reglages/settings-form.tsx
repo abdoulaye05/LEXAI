@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { COUNTRY_OPTIONS, getCountryByCode } from "@/lib/countries";
 
 type Fields = {
+  country: string;
   full_name: string;
   cabinet_name: string;
   cabinet_address: string;
@@ -18,59 +20,71 @@ type Fields = {
 const FIELD_CONFIG: {
   name: keyof Fields;
   label: string;
-  type: "text" | "textarea" | "email" | "url";
+  type: "text" | "textarea" | "email" | "url" | "select";
   placeholder?: string;
   hint?: string;
+  options?: { value: string; label: string }[];
 }[] = [
+  {
+    name: "country",
+    label: "Pays d'exercice",
+    type: "select",
+    options: COUNTRY_OPTIONS.map((c) => ({
+      value: c.code,
+      label: c.name,
+    })),
+    hint: "Détermine le droit national, la monnaie et les juridictions par défaut dans tous vos documents générés. Modifiable à tout moment.",
+  },
   {
     name: "full_name",
     label: "Nom complet (avocat)",
     type: "text",
-    placeholder: "Maître Jean Dupont",
+    placeholder: "Maître Mamadou Diallo",
   },
   {
     name: "bar_id",
     label: "Numéro au Barreau",
     type: "text",
-    placeholder: "ex. 12345",
+    placeholder: "ex. Barreau de Guinée n° 1234",
     hint: "Visible sur les PDF, rassure le client sur votre qualification.",
   },
   {
     name: "cabinet_name",
     label: "Nom du cabinet",
     type: "text",
-    placeholder: "Cabinet Dupont & Associés",
+    placeholder: "Cabinet Diallo & Associés",
     hint: "Apparaît en tête de vos PDF à la place de LexAI.",
   },
   {
     name: "cabinet_address",
     label: "Adresse complète",
     type: "textarea",
-    placeholder: "5 avenue de l'Opéra\n75001 Paris",
+    placeholder: "12 boulevard du Commerce\nKaloum, Conakry",
   },
   {
     name: "cabinet_phone",
     label: "Téléphone",
     type: "text",
-    placeholder: "01 23 45 67 89",
+    placeholder: "+224 622 00 00 00",
   },
   {
     name: "cabinet_email",
     label: "Email professionnel",
     type: "email",
-    placeholder: "contact@cabinet-dupont.fr",
+    placeholder: "contact@cabinet-diallo.gn",
   },
   {
     name: "cabinet_siret",
-    label: "SIRET",
+    label: "Numéro RCCM",
     type: "text",
-    placeholder: "123 456 789 00012",
+    placeholder: "ex. RCCM/GN-CKY/2020-B-002345",
+    hint: "Registre du Commerce et du Crédit Mobilier — équivalent OHADA du SIRET français.",
   },
   {
     name: "cabinet_website",
     label: "Site web (optionnel)",
     type: "url",
-    placeholder: "https://cabinet-dupont.fr",
+    placeholder: "https://cabinet-diallo.gn",
   },
 ];
 
@@ -140,6 +154,24 @@ export default function SettingsForm({
               onChange={(e) => update(f.name, e.target.value)}
               className="field mt-2 resize-none py-3 text-[17px] leading-[1.5]"
             />
+          ) : f.type === "select" && f.options ? (
+            <>
+              <select
+                id={f.name}
+                value={values[f.name]}
+                onChange={(e) => update(f.name, e.target.value)}
+                className="field mt-2 cursor-pointer"
+              >
+                {f.options.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              {f.name === "country" && (
+                <CountryDetails code={values.country} />
+              )}
+            </>
           ) : (
             <input
               id={f.name}
@@ -181,5 +213,34 @@ export default function SettingsForm({
         )}
       </div>
     </form>
+  );
+}
+
+// Bloc d'information éditorial qui affiche les conséquences du pays choisi
+// (monnaie, juridiction commerciale par défaut, capitale). Mis à jour
+// dynamiquement quand l'avocat change la sélection.
+function CountryDetails({ code }: { code: string }) {
+  const country = getCountryByCode(code);
+  return (
+    <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-3 border-l-2 border-ink pl-5 sm:grid-cols-3">
+      <div>
+        <p className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+          Monnaie locale
+        </p>
+        <p className="mt-1 font-serif text-base">{country.currency}</p>
+      </div>
+      <div>
+        <p className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+          Juridiction commerciale
+        </p>
+        <p className="mt-1 font-serif text-base">{country.mainCourt}</p>
+      </div>
+      <div>
+        <p className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+          Capitale
+        </p>
+        <p className="mt-1 font-serif text-base">{country.capital}</p>
+      </div>
+    </div>
   );
 }
